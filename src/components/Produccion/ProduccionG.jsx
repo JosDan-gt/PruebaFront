@@ -5,7 +5,7 @@ import ProduccionForm from './ProduccionForm';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
-import { FaEgg , FaCalendarAlt, FaEdit } from 'react-icons/fa';
+import { FaEgg, FaCalendarAlt, FaEdit } from 'react-icons/fa';
 import { MdRealEstateAgent } from "react-icons/md";
 import { LuReplace } from "react-icons/lu";
 import { GiEggClutch } from "react-icons/gi";
@@ -162,13 +162,12 @@ const ProduccionG = () => {
         <button
           disabled={isDisabled}  // Deshabilitando el botón si el lote está dado de baja
           onClick={handleAddClick}
-          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${
-            isDisabled
+          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${isDisabled
               ? 'bg-gray-400 text-gray-500 cursor-not-allowed'
               : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
-          }`}
+            }`}
         >
-          <FaEgg  className="inline-block mr-2" /> {/* Ícono en el botón */}
+          <FaEgg className="inline-block mr-2" /> {/* Ícono en el botón */}
           Agregar Producción
         </button>
       </div>
@@ -183,6 +182,7 @@ const ProduccionG = () => {
             refreshData();
           }}
           refreshData={refreshData}
+          isEditing={!!currentItem}
         />
       )}
 
@@ -219,11 +219,10 @@ const ProduccionG = () => {
                     <button
                       disabled={isDisabled}  // Deshabilitando el botón de editar si está dado de baja
                       onClick={() => handleEditClick(item)}
-                      className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-all duration-300 ${
-                        isDisabled
+                      className={`px-4 py-2 font-semibold rounded-lg shadow-md transition-all duration-300 ${isDisabled
                           ? 'bg-gray-400 text-gray-500 cursor-not-allowed'
                           : 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-400 hover:to-yellow-500'
-                      }`}
+                        }`}
                     >
                       <FaEdit className="inline-block mr-2" /> {/* Ícono de editar */}
                       Editar

@@ -12,7 +12,7 @@ import { BsFillLayersFill } from "react-icons/bs";
 
 
 
-const ClasificacionForm = ({ idLote, onClose, isUpdateMode, item, refrescarData }) => {
+const ClasificacionForm = ({ idLote, onClose, isUpdateMode, item, refrescarData, isEditing }) => {
   const { roles } = useContext(AuthContext);
   const isAdminOrGestor = roles.includes('Admin') || roles.includes('Gestor');
 
@@ -122,7 +122,7 @@ const ClasificacionForm = ({ idLote, onClose, isUpdateMode, item, refrescarData 
       setErrors((prev) => ({ ...prev, huevosSueltos: 'No puede ser mayor a 29.' }));
       return;
     }
-  
+
     if (name === 'cartonesExtras' && value > 11) {
       setErrors((prev) => ({ ...prev, cartonesExtras: 'No puede ser mayor a 11.' }));
       return;
@@ -134,7 +134,7 @@ const ClasificacionForm = ({ idLote, onClose, isUpdateMode, item, refrescarData 
     }));
   };
 
-  
+
 
 
 
@@ -355,24 +355,29 @@ const ClasificacionForm = ({ idLote, onClose, isUpdateMode, item, refrescarData 
           </div>
 
           {/* Botones de Acción */}
+          {/* Botones de Acción */}
           {isAdminOrGestor && (
             <div className="flex flex-col sm:flex-row justify-end mt-6 space-y-3 sm:space-y-0 sm:space-x-3">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
-              >
-                <FaBroom className="mr-2" /> {/* Ícono de limpiar */}
-                Limpiar
-              </button>
+              {!isUpdateMode && (
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
+                >
+                  <FaBroom className="mr-2" /> {/* Ícono de limpiar */}
+                  Limpiar
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={onClose}
-                className="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                className="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               >
                 <FaTimes className="mr-2" /> {/* Ícono de cancelar */}
                 Cancelar
               </button>
+
               <button
                 type="submit"
                 disabled={cargando}
@@ -383,6 +388,7 @@ const ClasificacionForm = ({ idLote, onClose, isUpdateMode, item, refrescarData 
               </button>
             </div>
           )}
+
 
         </form>
       </div>

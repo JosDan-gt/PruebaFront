@@ -75,9 +75,16 @@ const DetalleVentaForm = ({ venta, isEditing, onCancel, onSubmit }) => {
   };
 
   const handleRemoveDetail = (index) => {
+    // Validar que no se elimine el último detalle
+    if (formData.detallesVenta.length <= 1) {
+      handleError('No se puede eliminar el último detalle de venta.');
+      return;
+    }
+
     const newDetallesVenta = formData.detallesVenta.filter((_, i) => i !== index);
     setFormData({ ...formData, detallesVenta: newDetallesVenta });
   };
+
 
   const handleClearForm = () => {
     setFormData({
@@ -117,11 +124,14 @@ const DetalleVentaForm = ({ venta, isEditing, onCancel, onSubmit }) => {
     }
 
     try {
+      const fechaISO = new Date(formData.fechaVenta).toISOString().split('T')[0]; // Solo fecha en formato ISO (YYYY-MM-DD)
+
       const ventaData = isEditing
         ? {
           ventaId: venta?.ventaId || 0,
           clienteId: parseInt(formData.clienteId),
-          detallesVenta: formData.detallesVenta.map(detalle => ({
+          fechaVenta: fechaISO, // Enviar solo la fecha
+          detallesVenta: formData.detallesVenta.map((detalle) => ({
             productoId: parseInt(detalle.productoId),
             tipoEmpaque: detalle.tipoEmpaque,
             tamanoHuevo: detalle.tamanoHuevo,
@@ -132,9 +142,9 @@ const DetalleVentaForm = ({ venta, isEditing, onCancel, onSubmit }) => {
         : {
           venta: {
             clienteId: parseInt(formData.clienteId),
-            fechaVenta: formData.fechaVenta,
+            fechaVenta: fechaISO, // Enviar solo la fecha
           },
-          detallesVenta: formData.detallesVenta.map(detalle => ({
+          detallesVenta: formData.detallesVenta.map((detalle) => ({
             productoId: parseInt(detalle.productoId),
             tipoEmpaque: detalle.tipoEmpaque,
             tamanoHuevo: detalle.tamanoHuevo,
@@ -143,15 +153,27 @@ const DetalleVentaForm = ({ venta, isEditing, onCancel, onSubmit }) => {
           })),
         };
 
-      const url = isEditing ? '/api/Ventas/ActualizarVenta' : '/api/Ventas/InsertarDetallesVenta';
+      const url = isEditing
+        ? '/api/Ventas/ActualizarVenta'
+        : '/api/Ventas/InsertarDetallesVenta';
       const method = isEditing ? 'put' : 'post';
-      await axiosInstance[method](url, ventaData);
+
+      console.log('Datos enviados:', ventaData);
+
+      await axiosInstance[method](url, ventaData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       onSubmit();
     } catch (error) {
-      console.error('Error al procesar la venta:', error);
+      console.error('Error al procesar la venta:', error.response?.data || error.message);
       handleError('Error al procesar la venta.');
     }
   };
+
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
@@ -189,7 +211,7 @@ const DetalleVentaForm = ({ venta, isEditing, onCancel, onSubmit }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700">Fecha de Venta</label>
           <input
-            type="datetime-local"
+            type="date"
             className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
             value={formData.fechaVenta}
             onChange={(e) => setFormData({ ...formData, fechaVenta: e.target.value })}
@@ -332,25 +354,31 @@ const DetalleVentaForm = ({ venta, isEditing, onCancel, onSubmit }) => {
         ))}
 
         {/* Botón para agregar un nuevo detalle */}
-        <button
-          type="button"
-          onClick={handleAddDetail}
-          className="w-full sm:w-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
-        >
-          <FaPlus className="inline-block mr-2" /> Agregar Detalle
-        </button>
+        {/* Botón para agregar un nuevo detalle */}
+        {!isEditing && (
+          <button
+            type="button"
+            onClick={handleAddDetail}
+            className="w-full sm:w-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
+          >
+            <FaPlus className="inline-block mr-2" /> Agregar Detalle
+          </button>
+        )}
+
       </div>
 
 
       {/* Acciones del Formulario */}
       <div className="flex flex-col sm:flex-row justify-between mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
-        <button
-          type="button"
-          onClick={handleClearForm}
-          className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-        >
-          <FaBroom className="inline-block mr-2" /> Limpiar
-        </button>
+        {!isEditing && (
+          <button
+            type="button"
+            onClick={handleClearForm}
+            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+          >
+            <FaBroom className="inline-block mr-2" /> Limpiar
+          </button>
+        )}
         <div className="flex space-x-4">
           <button
             type="button"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaPlus } from 'react-icons/fa'; 
+import { FaEdit, FaPlus, FaTimes } from 'react-icons/fa';
 import axiosInstance from '../axiosInstance';
 import RazaForm from './RazasGForm';
 
@@ -8,7 +8,7 @@ const RazaG = () => {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); 
+  const [itemsPerPage] = useState(10);
   const [editRaza, setEditRaza] = useState(null);
 
   const fetchData = async () => {
@@ -28,14 +28,14 @@ const RazaG = () => {
   }, []);
 
   const handleUpdateClick = (raza) => {
-    setEditRaza(raza); 
-    setShowForm(true); 
+    setEditRaza(raza);
+    setShowForm(true);
   };
 
   const handleFormClose = () => {
     setShowForm(false);
     setEditRaza(null);
-    fetchData(); 
+    fetchData();
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -59,11 +59,10 @@ const RazaG = () => {
           <button
             key={number}
             onClick={() => paginate(number)}
-            className={`px-3 py-1 mx-1 border border-gray-300 rounded-md ${
-              currentPage === number
-                ? 'bg-green-700 text-white'
-                : 'bg-white text-green-700 hover:bg-green-200'
-            }`}
+            className={`px-3 py-1 mx-1 border border-gray-300 rounded-md ${currentPage === number
+              ? 'bg-green-700 text-white'
+              : 'bg-white text-green-700 hover:bg-green-200'
+              }`}
           >
             {number}
           </button>
@@ -86,17 +85,23 @@ const RazaG = () => {
       <div className="flex justify-center mb-4">
         <button
           onClick={() => {
-            setShowForm(!showForm);
-            setEditRaza(null); 
+            setShowForm((prev) => !prev); // Alterna entre mostrar/ocultar el formulario
+            setEditRaza(null); // Limpia la edición actual
           }}
-          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${
-            showForm
-              ? 'bg-gradient-to-r from-red-500 to-red-700 hover:from-red-400 hover:to-red-600'
-              : 'bg-gradient-to-r from-green-600 to-green-800 hover:from-green-500 hover:to-green-700'
-          }`}
+          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${showForm
+            ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+            : 'bg-gradient-to-r from-green-600 to-green-800 hover:from-green-500 hover:to-green-700'
+            }`}
         >
-          <FaPlus className="inline-block mr-2" />
-          {showForm ? 'Ocultar Formulario' : 'Agregar Nueva Raza'}
+          {showForm ? (
+            <>
+              <FaTimes className="inline-block mr-2" /> Ocultar Formulario {/* Icono de cerrar */}
+            </>
+          ) : (
+            <>
+              <FaPlus className="inline-block mr-2" /> Agregar Nueva Raza {/* Icono de agregar */}
+            </>
+          )}
         </button>
       </div>
 

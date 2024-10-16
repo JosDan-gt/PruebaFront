@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosInstance';
 import { FaSave, FaTimes, FaBroom } from 'react-icons/fa';
 
-const EstadoLoteForm = ({ estadoData, isEditing, onSubmit, onCancel, idLote, isDisabled }) => {
+const EstadoLoteForm = ({ estadoData, isEditing, onSubmit, onCancel, idLote }) => {
   const [formData, setFormData] = useState({
     bajas: '',
     fechaRegistro: '',
@@ -227,27 +227,29 @@ const EstadoLoteForm = ({ estadoData, isEditing, onSubmit, onCancel, idLote, isD
           <button
             type="button"
             onClick={onCancel}
-            className="w-full sm:w-auto px-4 py-2 font-semibold bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-all duration-300 flex items-center justify-center"
+            className="w-full sm:w-auto px-4 py-2 font-semibold bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-all duration-300 flex items-center justify-center"
           >
             <FaTimes className="mr-2" />
             Cancelar
           </button>
-          <button
-            type="button"
-            onClick={() =>
-              setFormData({
-                bajas: '',
-                fechaRegistro: '',
-                semana: '',
-                idEtapa: '',
-                descripcion: '', // Resetear descripción
-              })
-            }
-            className="w-full sm:w-auto px-4 py-2 font-semibold bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 transition-all duration-300 flex items-center justify-center"
-          >
-            <FaBroom className="mr-2" />
-            Limpiar
-          </button>
+          {!isEditing && (
+            <button
+              type="button"
+              onClick={() =>
+                setFormData({
+                  bajas: '',
+                  fechaRegistro: '',
+                  semana: '',
+                  idEtapa: '',
+                  descripcion: '', // Resetear descripción
+                })
+              }
+              className="w-full sm:w-auto px-4 py-2 font-semibold bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-all duration-300 flex items-center justify-center"
+            >
+              <FaBroom className="mr-2" />
+              Limpiar
+            </button>
+          )}
         </div>
       </form>
     </div>

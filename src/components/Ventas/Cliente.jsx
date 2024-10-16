@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
 import ClienteForm from '../Ventas/ClientesForm';
-import { FaUserEdit, FaTrashAlt, FaPlus, FaSortAlphaDown, FaSortAlphaUp } from 'react-icons/fa';
+import { FaUserEdit, FaTrashAlt, FaPlus, FaSortAlphaDown, FaSortAlphaUp, FaTimes } from 'react-icons/fa';
 
 const ClientesActivos = () => {
   const [clientes, setClientes] = useState([]);
@@ -94,8 +94,8 @@ const ClientesActivos = () => {
             key={number}
             onClick={() => paginate(number)}
             className={`px-3 py-1 mx-1 border border-gray-300 rounded-md ${currentPage === number
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-blue-600 hover:bg-blue-200'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-blue-600 hover:bg-blue-200'
               }`}
           >
             {number}
@@ -115,10 +115,20 @@ const ClientesActivos = () => {
       <div className="flex justify-center mb-6">
         <button
           onClick={() => { setShowForm(!showForm); setEditingCliente(null); }}
-          className="px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-500 hover:to-green-700"
+          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${showForm
+            ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+            : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
+            }`}
         >
-          <FaPlus className="inline-block mr-2" /> {/* Icono de agregar */}
-          {showForm ? 'Ocultar Formulario' : 'Agregar Nuevo Cliente'}
+          {showForm ? (
+            <>
+              <FaTimes className="inline-block mr-2" /> Ocultar Formulario
+            </>
+          ) : (
+            <>
+              <FaPlus className="inline-block mr-2" /> Agregar Nuevo Cliente
+            </>
+          )}
         </button>
       </div>
 

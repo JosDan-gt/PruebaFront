@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import CorralForm from './CorralForm'; // Importa el formulario
 import axiosInstance from '../axiosInstance.jsx';
 import { AuthContext } from '../Context/AuthContext'; // Importa el AuthContext
-import { FaEdit, FaWater, FaRulerVertical, FaRulerHorizontal, FaUtensils, FaTint, FaLayerGroup, FaArrowLeft, FaArrowRight, FaHome, FaCheck, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaWater, FaRulerVertical, FaRulerHorizontal, FaUtensils, FaTint, FaLayerGroup, FaHome, FaCheck, FaPlus, FaTimes } from 'react-icons/fa';
 
 const Corral = () => {
     const [corrales, setCorrales] = useState([]);
@@ -20,7 +20,7 @@ const Corral = () => {
     const isUser = roles.includes('User');
     const isAdmin = roles.includes('Admin');
 
-    
+
     useEffect(() => {
         const fetchCorrales = async () => {
             setLoading(true);
@@ -134,7 +134,7 @@ const Corral = () => {
 
     // Cambio de página
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    
+
 
     return (
         <div className="p-6 bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 shadow-xl rounded-xl">
@@ -146,11 +146,22 @@ const Corral = () => {
 
                 {isAdmin && (
                     <button
-                        onClick={handleAddNew}
-                        className="px-4 py-2 text-white font-semibold rounded-lg shadow-md bg-blue-600 hover:bg-blue-500 flex items-center transition-all duration-300"
+                        onClick={() => setShowForm((prev) => !prev)} // Alterna entre mostrar/ocultar formulario
+                        className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 
+                            ${showForm
+                                ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+                                : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
+                            }`}
                     >
-                        <FaPlus className="mr-2" />
-                        Agregar Nuevo Corral
+                        {showForm ? (
+                            <>
+                                <FaTimes className="inline-block mr-2" /> Ocultar Formulario {/* Icono de cerrar */}
+                            </>
+                        ) : (
+                            <>
+                                <FaPlus className="inline-block mr-2" /> Agregar Nuevo Corral {/* Icono de agregar */}
+                            </>
+                        )}
                     </button>
                 )}
             </div>
@@ -311,8 +322,8 @@ const Corral = () => {
                         key={index}
                         onClick={() => paginate(index + 1)}
                         className={`mx-1 px-4 py-2 text-white font-semibold rounded-lg shadow-md ${currentPage === index + 1
-                                ? 'bg-blue-800'
-                                : 'bg-blue-600 hover:bg-blue-500 transition-all duration-300'
+                            ? 'bg-blue-800'
+                            : 'bg-blue-600 hover:bg-blue-500 transition-all duration-300'
                             }`}
                     >
                         {index + 1}

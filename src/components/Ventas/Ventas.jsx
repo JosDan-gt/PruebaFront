@@ -7,7 +7,7 @@ import VentasPorClientePDF from './VentasPorClientePDF';
 import VentasPorFechaPDF from './VentasPorFechaPDF';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { FaEdit, FaFileDownload, FaSearch } from 'react-icons/fa';
+import { FaEdit, FaFileDownload, FaSearch, FaPlus, FaTimes } from 'react-icons/fa';
 
 const VentasActivas = () => {
   const [detallesVentas, setDetallesVentas] = useState({});
@@ -101,13 +101,18 @@ const VentasActivas = () => {
   };
 
   const handleEdit = (venta) => {
+    const fechaISO = venta.fechaVenta ? new Date(venta.fechaVenta).toISOString().split('T')[0] : '';
+
     setVentaSeleccionada({
       ...venta,
+      fechaVenta: fechaISO, // Fecha en formato 'YYYY-MM-DD'
       detallesVenta: detallesVentas[venta.ventaId] || [],
     });
+
     setIsEditing(true);
     setMostrarFormulario(true);
   };
+
 
   const handleFormCancel = () => {
     setVentaSeleccionada(null);
@@ -186,16 +191,30 @@ const VentasActivas = () => {
       </h2>
 
 
-      {/* Botón para agregar nueva venta */}
       <div className="flex justify-center mb-4">
         <button
-          onClick={handleAdd}
-          className="px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700"
+          onClick={() => setMostrarFormulario((prev) => !prev)} // Alterna entre mostrar/ocultar formulario
+          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 
+      ${mostrarFormulario
+              ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+              : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
+            }`}
         >
-          <FaEdit className="inline-block mr-2" /> {/* Icono de editar en el botón */}
-          Agregar Nueva Venta
+          {mostrarFormulario ? (
+            <>
+              <FaTimes className="inline-block mr-2" /> {/* Icono de cerrar */}
+              Ocultar Formulario
+            </>
+          ) : (
+            <>
+              <FaPlus className="inline-block mr-2" /> {/* Icono de agregar */}
+              Agregar Nueva Venta
+            </>
+          )}
         </button>
       </div>
+
+
 
       {mostrarFormulario && (
         <DetalleVentaForm

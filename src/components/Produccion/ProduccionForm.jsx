@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
 import { FaSave, FaTimes, FaBroom } from 'react-icons/fa'; // Importar iconos
 
-const ProduccionForm = ({ item, idLote, onClose, refreshData }) => {
+const ProduccionForm = ({ item, idLote, onClose, refreshData, isEditing }) => {
   const [formData, setFormData] = useState({
     idProd: '',
     cantCajas: '0',
@@ -15,6 +15,7 @@ const ProduccionForm = ({ item, idLote, onClose, refreshData }) => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    console.log('isEditing:', isEditing);
     if (item) {
       setFormData({
         ...item,
@@ -25,13 +26,13 @@ const ProduccionForm = ({ item, idLote, onClose, refreshData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     // Validación para evitar números negativos
     if (parseInt(value, 10) < 0) {
       setErrors((prev) => ({ ...prev, [name]: 'El valor no puede ser negativo.' }));
       return; // No actualiza el estado si el valor es negativo
     }
-  
+
     // Validación específica para `cantSueltos` y `cantCartones`
     if (name === 'defectuosos' && value > 29) {
       setErrors((prev) => ({ ...prev, defectuosos: 'No puede ser mayor a 29.' }));
@@ -42,21 +43,21 @@ const ProduccionForm = ({ item, idLote, onClose, refreshData }) => {
       setErrors((prev) => ({ ...prev, cantSueltos: 'No puede ser mayor a 29.' }));
       return;
     }
-  
+
     if (name === 'cantCartones' && value > 11) {
       setErrors((prev) => ({ ...prev, cantCartones: 'No puede ser mayor a 11.' }));
       return;
     }
     // Elimina errores si el valor vuelve a ser válido
     setErrors((prev) => ({ ...prev, [name]: '' }));
-  
+
     // Actualiza el estado del formulario
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
   };
-  
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -215,25 +216,29 @@ const ProduccionForm = ({ item, idLote, onClose, refreshData }) => {
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-auto px-4 py-2 font-semibold bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-all duration-300 flex items-center justify-center"
+            className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-400 hover:to-red-500 transition-all duration-300 flex items-center justify-center"
           >
             <FaTimes className="mr-2" /> {/* Ícono de cancelar */}
             Cancelar
           </button>
-          <button
-            type="button"
-            onClick={() => setFormData({
-              cantCajas: '',
-              cantCartones: '',
-              cantSueltos: '',
-              defectuosos: '',
-              fechaRegistroP: ''
-            })}
-            className="w-full sm:w-auto px-4 py-2 font-semibold bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 transition-all duration-300 flex items-center justify-center"
-          >
-            <FaBroom className="mr-2" /> {/* Ícono de limpiar */}
-            Limpiar
-          </button>
+          {!isEditing && (
+            <button
+              type="button"
+              onClick={() =>
+                setFormData({
+                  cantCajas: '',
+                  cantCartones: '',
+                  cantSueltos: '',
+                  defectuosos: '',
+                  fechaRegistroP: '',
+                })
+              }
+              className="w-full sm:w-auto px-4 py-2 font-semibold bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-all duration-300 flex items-center justify-center"
+            >
+              <FaBroom className="mr-2" /> Limpiar
+            </button>
+          )}
+
         </div>
 
       </form>

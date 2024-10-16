@@ -8,8 +8,10 @@ import { LuReplace } from 'react-icons/lu';
 import { MdRealEstateAgent } from "react-icons/md";
 import { TbBuildingEstate } from "react-icons/tb";
 import { FaSpinner } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const EstadoLote = () => {
+const EstadoLote = ({ onFilterChange }) => {
   const { idLote } = useParams();
   const [selectedEstado, setSelectedEstado] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -23,8 +25,8 @@ const EstadoLote = () => {
   const [loading, setLoading] = useState(true);
   const [estadoLote, setEstadoLote] = useState([]);
   const [etapas, setEtapas] = useState([]);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
 
   const isDisabled = estadoBaja !== undefined ? estadoBaja : false;
 
@@ -66,6 +68,15 @@ const EstadoLote = () => {
       fetchEtapas();
     }
   }, [idLote]);
+
+  useEffect(() => {
+    if (onFilterChange && startDate && endDate) {
+      onFilterChange({ startDate, endDate });
+    } else if (onFilterChange) {
+      onFilterChange(null); // Restablecer filtro si no hay fechas
+    }
+  }, [startDate, endDate, onFilterChange]);
+
 
   const handleAddNew = () => {
     setSelectedEstado(null);
@@ -123,15 +134,31 @@ const EstadoLote = () => {
     fetchEstadoLote();
   };
 
-  const handleFilterByDate = () => {
+  const restoreOriginalData = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(`/getestadolote?idLote=${idLote}`);
+      const sortedData = response.data.sort((a, b) => new Date(b.fechaRegistro) - new Date(a.fechaRegistro));
+      setEstadoLote(sortedData);
+    } catch (error) {
+      console.error('Error al restaurar los datos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleFilterByDate = (range) => {
+    const [start, end] = range;
     const filteredData = estadoLote.filter((estado) => {
       const fecha = new Date(estado.fechaRegistro);
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      return (!startDate || fecha >= start) && (!endDate || fecha <= end);
+      return (!start || fecha >= new Date(start)) && (!end || fecha <= new Date(end));
     });
     setEstadoLote(filteredData);
   };
+
+
+
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -215,34 +242,29 @@ const EstadoLote = () => {
 
 
       {/* Filtros por rango de fecha */}
-      <div className=" mb-6 flex space-x-4 justify-center">
-        <div>
-          <label className="block text-sm font-semibold mb-1 text-blue-900">Fecha Inicio</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="w-32 p-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600" // Ajuste de ancho
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-semibold mb-1 text-blue-900">Fecha Fin</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="w-32 p-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-600" // Ajuste de ancho
-          />
-        </div>
-      </div>
+      <div className="mb-6 flex flex-col items-center">
+        <label className="block text-lg font-semibold text-gray-800 mb-4 text-center">
+          Selecciona Rango de Fechas
+        </label>
 
-      <div className="mb-6 flex justify-center">
-        <button
-          onClick={handleFilterByDate}
-          className="px-4 py-2 text-sm font-semibold bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300"
-        >
-          Filtrar por Fecha
-        </button>
+        <div className="flex items-center space-x-4">
+          <DatePicker
+            selectsRange
+            startDate={startDate}
+            endDate={endDate}
+            onChange={(update) => {
+              setDateRange(update); // Actualiza el rango de fechas
+              if (!update[0] && !update[1]) {
+                restoreOriginalData(); // Restaura los datos si no hay fechas seleccionadas
+              } else {
+                handleFilterByDate(update); // Filtra si hay fechas seleccionadas
+              }
+            }}
+            className="w-64 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+            placeholderText="Seleccionar fechas"
+            isClearable
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -317,7 +339,7 @@ const EstadoLote = () => {
 
 
       <Pagination totalPages={totalPages} currentPage={currentPage} paginate={paginate} />
-    </div>
+    </div >
   );
 };
 

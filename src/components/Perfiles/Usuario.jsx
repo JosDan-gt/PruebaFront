@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
 import UsuarioForm from './UsuarioForm';
-import { FaEdit, FaUserPlus, FaCheck, FaTimes, FaUser } from 'react-icons/fa';
+import { FaEdit, FaUserPlus, FaTimes, FaUser } from 'react-icons/fa';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -111,11 +111,21 @@ const Usuarios = () => {
         </h2>
 
         <button
-          onClick={handleAddNew}
-          className="px-4 py-2 text-white font-semibold rounded-lg shadow-md bg-blue-600 hover:bg-blue-500 flex items-center transition-all duration-300"
+          onClick={() => setShowForm((prev) => !prev)} // Alterna entre mostrar/ocultar formulario
+          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${showForm
+            ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+            : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
+            } flex items-center`}
         >
-          <FaUserPlus className="mr-2" />
-          Agregar Nuevo Usuario
+          {showForm ? (
+            <>
+              <FaTimes className="mr-2" /> Ocultar Formulario {/* Icono de cerrar */}
+            </>
+          ) : (
+            <>
+              <FaUserPlus className="mr-2" /> Agregar Nuevo Usuario {/* Icono de agregar */}
+            </>
+          )}
         </button>
       </div>
 

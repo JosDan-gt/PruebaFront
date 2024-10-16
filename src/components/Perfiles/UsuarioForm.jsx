@@ -178,13 +178,15 @@ const UsuarioForm = ({ usuarioData, isEditing, onSubmit, onCancel }) => {
             </div>
 
             <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
-                <button
-                    type="button"
-                    onClick={handleClear}
-                    className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold rounded-lg hover:from-yellow-400 hover:to-yellow-500 transition-all duration-300 flex items-center justify-center"
-                >
-                    <FaBroom className="mr-2" /> Limpiar
-                </button>
+                {!isEditing && (
+                    <button
+                        type="button"
+                        onClick={handleClear}
+                        className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold rounded-lg hover:from-yellow-400 hover:to-yellow-500 transition-all duration-300 flex items-center justify-center"
+                    >
+                        <FaBroom className="mr-2" /> Limpiar
+                    </button>
+                )}
                 <button
                     type="button"
                     onClick={onCancel}
@@ -192,6 +194,7 @@ const UsuarioForm = ({ usuarioData, isEditing, onSubmit, onCancel }) => {
                 >
                     <FaTimes className="mr-2" /> Cancelar
                 </button>
+
                 <button
                     type="submit"
                     className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg hover:from-blue-500 hover:to-blue-700 transition-all duration-300 flex items-center justify-center"

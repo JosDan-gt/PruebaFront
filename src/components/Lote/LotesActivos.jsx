@@ -3,7 +3,7 @@ import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import LoteForm from './LoteForm';
 import { AuthContext } from '../Context/AuthContext';
-import { FaEdit, FaTrash, FaArrowDown, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaArrowDown, FaPlus, FaTimes } from 'react-icons/fa';
 import { GiChicken } from "react-icons/gi";
 import { FaSpinner } from 'react-icons/fa';
 
@@ -132,10 +132,22 @@ const LotesActivos = ({ reloadFlag, triggerReload }) => {
         <h2 className="text-4xl font-extrabold text-black tracking-wider">Lotes Activos</h2>
         {isAdmin && (
           <button
-            onClick={handleAddNew}
-            className="px-5 py-2 bg-gradient-to-r from-black to-red-600 text-white font-semibold rounded-full hover:scale-105 transition-transform duration-300 flex items-center space-x-2 shadow-lg"
+            onClick={() => setShowForm((prev) => !prev)} // Alterna entre abrir/cerrar el formulario
+            className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 flex items-center space-x-2 
+              ${showForm
+                ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+                : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
+              }`}
           >
-            <FaPlus /> <span>Agregar Nuevo Lote</span>
+            {showForm ? (
+              <>
+                <FaTimes className="inline-block mr-2" /> <span>Ocultar Formulario</span> {/* Icono de cerrar */}
+              </>
+            ) : (
+              <>
+                <FaPlus className="inline-block mr-2" /> <span>Agregar Nuevo Lote</span> {/* Icono de agregar */}
+              </>
+            )}
           </button>
         )}
       </div>

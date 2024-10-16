@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axiosInstance';
 import ProductoForm from './ProductosForm'; // Importa el componente de formulario
-import { FaEdit, FaTrashAlt, FaPlus } from 'react-icons/fa'; // Importando íconos
+import { FaEdit, FaTrashAlt, FaPlus, FaTimes } from 'react-icons/fa'; // Importando íconos
 
 const ProductosActivos = () => {
   const [productos, setProductos] = useState([]);
@@ -110,10 +110,20 @@ const ProductosActivos = () => {
       <div className="flex justify-center mb-6">
         <button
           onClick={() => { setShowForm(!showForm); setEditingProducto(null); }}
-          className="px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700"
+          className={`px-6 py-3 text-white font-semibold rounded-full shadow-lg transition-all duration-300 ${showForm
+              ? 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700'
+              : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700'
+            }`}
         >
-          <FaPlus className="inline-block mr-2" /> {/* Icono de agregar */}
-          {showForm ? 'Ocultar Formulario' : 'Agregar Nuevo Producto'}
+          {showForm ? (
+            <>
+              <FaTimes className="inline-block mr-2" /> Ocultar Formulario
+            </>
+          ) : (
+            <>
+              <FaPlus className="inline-block mr-2" /> Agregar Nuevo Producto
+            </>
+          )}
         </button>
       </div>
 
