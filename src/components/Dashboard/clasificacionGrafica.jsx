@@ -84,7 +84,7 @@ const ClasificacionGrafica = ({ idLote, period }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: false, // Permite que la gráfica se ajuste al contenedor
     plugins: {
       legend: {
         position: 'bottom',
@@ -160,14 +160,16 @@ const ClasificacionGrafica = ({ idLote, period }) => {
     },
   };
 
+  // En el contenedor, asegúrate de que el height sea mayor
   return (
     <div className="bg-white p-4 rounded-lg shadow-lg border border-green-600">
       <h2 className="text-lg font-bold mb-4 text-center text-green-800">Clasificación</h2>
-      <div className="w-full h-64">
+      <div className="w-full" style={{ height: '600px' }}> {/* Cambia el height como necesites */}
         <Line ref={classificationChartRef} data={classificationChart} options={options} />
       </div>
     </div>
   );
+
 };
 
 export default ClasificacionGrafica;

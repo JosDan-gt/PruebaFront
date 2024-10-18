@@ -124,7 +124,7 @@ const ProduccionGrafica = ({ idLote, period }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-lg border border-green-600">
       <h2 className="text-lg font-bold mb-4 text-center text-green-800">Producción</h2>
-      <div className="w-full h-64">
+      <div className="w-full" style={{ height: '600px' }}>
         <Line ref={productionChartRef} data={productionChart} options={options} />
       </div>
     </div>
