@@ -57,7 +57,7 @@ const LoteSelector = ({ onSelectLote }) => {
           onChange={handleSelectChange} 
           className="mt-1 block w-full px-4 py-3 text-base border border-blue-500 bg-yellow-100 text-yellow-800 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg shadow-md transition duration-300"
         >
-          <option value="">Seleccione un lote...</option>
+          <option value="">Seleccione un Lote...</option>
           {lotes.map(lote => (
             <option key={lote.idLote} value={lote.idLote}>
               {lote.numLote}
